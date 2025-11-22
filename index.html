@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Gaza War People Comparison (1 pixel = 1 person)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!-- PeopleSquares class -->
+    <script src="zoom.js"></script>
+</head>
+
+<body>
+<header class="page-header">
+    <h1>Gaza War People Comparison (1 pixel = 1 person)</h1>
+    <p class="subtitle">
+        Each square’s area is proportional to the number of people affected.
+        Scroll to zoom in and out.
+    </p>
+</header>
+
+<!-- MAIN TWO-PANEL LAYOUT -->
+<main class="page-main">
+
+    <!-- LEFT: MAIN VIS -->
+    <div id="viz-container" aria-label="People comparison chart"></div>
+
+    <!-- RIGHT: NAMES PANEL -->
+    <aside id="names-panel" aria-label="Names of the Dead">
+        <div id="names-header">
+            <div id="names-title">Names of the Dead</div>
+            <div id="names-subtitle">
+                Data: T4P – name, age, and gender
+            </div>
+        </div>
+
+        <!-- Names inserted here by main.js -->
+        <div id="names-container"></div>
+    </aside>
+
+</main>
+
+<footer class="page-footer">
+    <p>
+        Data placeholders in <code>chart.js</code>
+    </p>
+</footer>
+
+<!-- Chart + Names Logic -->
+<script src="chart.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

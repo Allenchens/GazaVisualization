@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>69,000 Candles (Non-Overlapping)</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #000; /* black background */
+      overflow: auto;   /* allow scrollbars if canvas > viewport */
+    }
+
+    canvas {
+      display: block;
+      /* canvas size is set via JS to at least 1920x1080 */
+    }
+  </style>
+</head>
+<body>
+  <canvas id="candleCanvas"></canvas>
+
+  <script>
+    const TOTAL_CANDLES = 69000;
+    const DURATION_MS = 20000; // ~20 seconds
+    const CANDLE_EMOJI = "🕯️";
+
+    const MIN_WIDTH = 1920;  // at least 1080p, no scroll on 1920x1080+
+    const MIN_HEIGHT = 1080;
+
+    const canvas = document.getElementById("candleCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let positions = [];
+    let fontSize = 10;
+
+    function setupCanvas() {
+      const width = Math.max(window.innerWidth, MIN_WIDTH);
+      const height = Math.max(window.innerHeight, MIN_HEIGHT);
+
+      canvas.width = width;
+      canvas.height = height;
+
+      generateGridPositions(width, height);
+    }
+
+    function generateGridPositions(width, height) {
+      positions = [];
+
+      // Choose grid dimensions based on aspect ratio and total candles
+      const aspect = width / height;
+      const cols = Math.ceil(Math.sqrt(TOTAL_CANDLES * aspect));
+      const rows = Math.ceil(TOTAL_CANDLES / cols);
+
+      const cellW = width / cols;
+      const cellH = height / rows;
+      const cellSize = Math.min(cellW, cellH);
+
+      // Font size based on cell size (so they don't overlap)
+      fontSize = Math.max(4, Math.floor(cellSize * 0.8));
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (positions.length >= TOTAL_CANDLES) break;
+
+          // Center of the cell
+          let x = c * cellW + cellW / 2;
+          let y = r * cellH + cellH / 2;
+
+          // Optional tiny jitter to look less "perfect grid"
+          const jitterX = (cellW * 0.3) * (Math.random() - 0.5);
+          const jitterY = (cellH * 0.3) * (Math.random() - 0.5);
+
+          x += jitterX;
+          y += jitterY;
+
+          positions.push({ x, y });
+        }
+        if (positions.length >= TOTAL_CANDLES) break;
+      }
+
+      // Shuffle positions so the reveal looks random
+      for (let i = positions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [positions[i], positions[j]] = [positions[j], positions[i]];
+      }
+    }
+
+    let startTime = null;
+    let lastDrawn = 0;
+
+    function easeInQuad(t) {
+      return t * t; // slow at start, then speeds up
+    }
+
+    function animate(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+
+      const progress = Math.min(elapsed / DURATION_MS, 1);
+      const eased = easeInQuad(progress);
+
+      const targetCount = Math.floor(TOTAL_CANDLES * eased);
+
+      ctx.font = `${fontSize}px sans-serif`;
+
+      for (let i = lastDrawn; i < targetCount; i++) {
+        const c = positions[i];
+        ctx.fillText(CANDLE_EMOJI, c.x, c.y);
+      }
+
+      lastDrawn = targetCount;
+
+      if (targetCount < TOTAL_CANDLES) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    // Initial setup
+    setupCanvas();
+    requestAnimationFrame(animate);
+
+
+    // window.addEventListener("resize", () => {
+    //   startTime = null;
+    //   lastDrawn = 0;
+    //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //   setupCanvas();
+    //   requestAnimationFrame(animate);
+    // });
+  </script>
+</body>
+</html>
