@@ -16,39 +16,74 @@
 
 <body>
 <header class="page-header">
-    <h1>Gaza War People Comparison (1 pixel = 1 person)</h1>
+    <h1>Gaza: Beyond the Numbers</h1>
     <p class="subtitle">
-        Each square’s area is proportional to the number of people affected.
-        Scroll to zoom in and out.
+Each pixel is a person. Each name is a life. Each photo is evidence. Zoom and scroll to confront the scale of the loss.
     </p>
 </header>
 
-<!-- MAIN TWO-PANEL LAYOUT -->
+<!-- MAIN THREE-PANEL LAYOUT -->
 <main class="page-main">
 
-    <!-- LEFT: MAIN VIS -->
-    <div id="viz-container" aria-label="People comparison chart"></div>
+    <!-- LEFT: PHOTOS -->
+    <aside id="photo-panel" aria-label="Images from Gaza">
+        <div id="photo-header">
+            <div id="photo-title">Photographs from Gaza</div>
+            <div id="photo-subtitle">These photographs do not contain gore or graphic imagery. Instead, they document the conditions of the genocide.
 
-    <!-- RIGHT: NAMES PANEL -->
-    <aside id="names-panel" aria-label="Names of the Dead">
-        <div id="names-header">
-            <div id="names-title">Names of the Dead</div>
-            <div id="names-subtitle">
-                Data: T4P – name, age, and gender
+We do not need to see a bloody body to understand violence; the evidence is in the destroyed homes, the displaced families, and the despair in people's eyes. These images capture the "spatial conditions" that make life in Gaza impossible.
             </div>
         </div>
 
-        <!-- Names inserted here by main.js -->
+        <!-- Images will be injected here by JS -->
+        <div id="photo-strip-inner"></div>
+    </aside>
+
+    <!-- CENTER: MAIN VIS -->
+    <div id="viz-container" aria-label="People comparison chart"></div>
+
+    <!-- RIGHT: NAMES -->
+    <aside id="names-panel" aria-label="Names of the Dead">
+        <div id="names-header">
+            <div id="names-title">Some of the People Killed in Gaza</div>
+            <div id="names-subtitle">
+                Based on Tech for Palestine’s list of names. This list is incomplete and always changing.
+            </div>
+        </div>
         <div id="names-container"></div>
     </aside>
 
 </main>
 
-<footer class="page-footer">
-    <p>
-        Data placeholders in <code>chart.js</code>
+
+<div class="footer-about">
+  <div class="footer-text">
+    <p><strong>About this project</strong><br>
+      We hear the numbers every day, but they are rising so fast that it’s hard to grasp what they mean.
+      It’s easy to see “67,000” and forget that every single digit stands for a person who had a life, a family, and a name.
     </p>
-</footer>
+    <p>This website is an attempt to resist that numbness. It is designed to make you take your time.</p>
+    <p>When you zoom all the way out, the victims are grouped into blocks of data, this is how we usually see the war, as “statistics.”
+      But as you zoom in, those blocks break apart until every square represents a single human being.
+    </p>
+    <p>Please don’t just scroll past. Take time to look and reflect, read the names, and witness the reality behind the numbers.</p>
+  </div>
+  <div class="footer-credits">
+    <p>
+      <strong>Credits</strong><br>
+      Data: based on
+      <a href="https://www.aljazeera.com/news/2025/10/7/two-years-of-israels-genocide-in-gaza-by-the-numbers" target="_blank" rel="noopener noreferrer">
+        Al Jazeera’s reporting on Gaza’s death toll
+      </a>.<br>
+      Images: war photography from the
+      <a href="https://apnews.com/hub/photography-war/" target="_blank" rel="noopener noreferrer">
+        Associated Press
+      </a>.<br>
+      Created By Allen Chen using JavaScript and D3.js.
+    </p>
+  </div>
+</div>
+
 
 <!-- Chart + Names Logic -->
 <script src="chart.js"></script>

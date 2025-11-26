@@ -160,3 +160,562 @@ body {
     font-size: 0.75rem;
     color: #555;
 }
+
+/* ---------------------------------------
+   LEFT PHOTO PANEL
+--------------------------------------- */
+
+#photo-panel {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    background: #111;
+    color: #eee;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header at top of photo panel */
+#photo-header {
+    padding: 10px 12px;
+    border-bottom: 1px solid #333;
+    background: #181818;
+}
+
+#photo-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+#photo-subtitle {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-top: 2px;
+}
+
+/* Scrollable strip */
+#photo-strip-inner {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Each image + caption */
+.photo-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.photo-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.photo-caption {
+    font-size: 0.7rem;
+    color: #ccc;
+    line-height: 1.25;
+}
+
+.photo-credit {
+    font-size: 0.65rem;
+    color: #888;
+}
+
+/* Optional soft gradient top/bottom */
+#photo-strip-inner::before,
+#photo-strip-inner::after {
+    content: "";
+    position: sticky;
+    left: 0;
+    right: 0;
+    height: 18px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#photo-strip-inner::before {
+    top: 0;
+    background: linear-gradient(to bottom, #111, transparent);
+}
+
+#photo-strip-inner::after {
+    bottom: 0;
+    background: linear-gradient(to top, #111, transparent);
+}
+.footer-about {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+
+  margin: 4px 16px 6px;
+  padding-top: 4px;
+  border-top: 1px solid #ddd;
+
+  font-size: 0.8rem;    /* smaller text */
+  line-height: 1.25;    /* tighter lines */
+}
+
+/* Left side: all your About text (unchanged HTML) */
+.footer-text {
+  flex: 3;
+  /* make it shorter by using columns instead of one tall block */
+  column-count: 2;
+  column-gap: 1.5rem;
+}
+
+/* Kill huge paragraph margins so they don't stack vertically */
+.footer-text p {/* ===========================
+   Global layout / base styles
+   =========================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+    background: #f5f5f5;
+    color: #111;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Constrain main content to a reasonable width and center it */
+.page-header,
+.page-main,
+.footer-about {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ===========================
+   Header
+   =========================== */
+
+.page-header {
+    padding: 16px 24px 8px;
+    border-bottom: 1px solid #ddd;
+    background: #ffffff;
+}
+
+.page-header h1 {
+    margin: 0 0 4px;
+    font-size: 1.6rem;
+}
+
+.subtitle {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* ===========================
+   Main area: photos + chart + names
+   =========================== */
+
+.page-main {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    padding: 8px 16px 16px;
+    gap: 12px;
+    min-height: 0;
+}
+
+/* -------- Visualization container (center) -------- */
+
+#viz-container {
+    flex: 3;
+    min-width: 0;
+    background: #ffffff;
+    margin: 0;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: zoom-in; /* hint that it’s interactive */
+}
+
+/* SVG inside vis */
+#viz-container svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ===========================
+   Names side panel (right)
+   =========================== */
+
+#names-panel {
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    background: #fafafa;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#names-header {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ddd;
+    background: #f3f3f3;
+}
+
+#names-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+#names-subtitle {
+    font-size: 0.75rem;
+    color: #555;
+    margin-top: 2px;
+}
+
+/* Names container: real scroll, native scrollbar */
+#names-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    position: relative;
+    scroll-behavior: smooth;
+}
+
+/* Fade edges */
+#names-container::before,
+#names-container::after {
+    content: "";
+    position: sticky;
+    left: 0;
+    right: 0;
+    height: 18px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#names-container::before {
+    top: 0;
+    background: linear-gradient(to bottom, #fafafa, transparent);
+}
+
+#names-container::after {
+    bottom: 0;
+    background: linear-gradient(to top, #fafafa, transparent);
+}
+
+/* Individual person rows */
+
+.victim-row {
+    padding: 4px 0;
+    border-bottom: 1px solid #eee;
+    transition: background 0.15s ease;
+}
+
+.victim-row:last-child {
+    border-bottom: none;
+}
+
+.victim-row:hover {
+    background: #f0f0f0;
+}
+
+.victim-name {
+    font-weight: 600;
+}
+
+.victim-meta {
+    font-size: 0.75rem;
+    color: #555;
+}
+
+/* ===========================
+   Left photo panel
+   =========================== */
+
+#photo-panel {
+    flex: 1;
+    min-width: 220px;
+    max-width: 340px;
+    background: #111;
+    color: #eee;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header at top of photo panel */
+#photo-header {
+    padding: 10px 12px;
+    border-bottom: 1px solid #333;
+    background: #181818;
+}
+
+#photo-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+#photo-subtitle {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-top: 2px;
+}
+
+/* Scrollable strip */
+#photo-strip-inner {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Each image + caption */
+.photo-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.photo-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+
+.photo-item:hover img {
+    transform: scale(1.01);
+    filter: brightness(1.05);
+}
+
+.photo-caption {
+    font-size: 0.7rem;
+    color: #ccc;
+    line-height: 1.25;
+}
+
+.photo-credit {
+    font-size: 0.65rem;
+    color: #888;
+}
+
+/* Soft gradient at top/bottom of photo list */
+#photo-strip-inner::before,
+#photo-strip-inner::after {
+    content: "";
+    position: sticky;
+    left: 0;
+    right: 0;
+    height: 18px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#photo-strip-inner::before {
+    top: 0;
+    background: linear-gradient(to bottom, #111, transparent);
+}
+
+#photo-strip-inner::after {
+    bottom: 0;
+    background: linear-gradient(to top, #111, transparent);
+}
+
+/* ===========================
+   Footer: About + Credits
+   =========================== */
+
+.footer-about {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+
+    margin: 4px 16px 6px;
+    padding: 6px 8px 10px;
+    border-top: 1px solid #ddd;
+    background: #ffffff;
+
+    font-size: 0.8rem;
+    line-height: 1.25;
+}
+
+/* Left side: About text */
+.footer-text {
+    flex: 3;
+    column-count: 2;
+    column-gap: 1.5rem;
+}
+
+.footer-text p {
+    margin: 0 0 0.4rem;
+}
+
+/* Right side: Credits */
+.footer-credits {
+    flex: 1.6;
+    text-align: right;
+}
+
+.footer-credits p {
+    margin: 0;
+}
+
+/* ===========================
+   Responsive tweaks
+   =========================== */
+
+@media (max-width: 900px) {
+    .page-main {
+        flex-direction: column;
+    }
+
+    #photo-panel,
+    #viz-container,
+    #names-panel {
+        max-width: 100%;
+    }
+
+    .footer-about {
+        flex-direction: column;
+    }
+
+    .footer-text {
+        column-count: 1;
+    }
+
+    .footer-credits {
+        text-align: left;
+    }
+}
+
+  margin: 0 0 0.4rem;
+}
+
+/* Right side: Credits */
+.footer-credits {
+  flex: 1.6;
+  text-align: right;
+}
+
+.footer-credits p {
+  margin: 0;
+}
+
+/* On small screens, stack everything so it’s still readable */
+@media (max-width: 900px) {
+  .footer-about {
+    flex-direction: column;
+  }
+
+  .footer-text {
+    column-count: 1;
+  }
+
+  .footer-credits {
+    text-align: left;
+  }
+}
+/* === Make right (names) panel black + white === */
+
+#names-panel {
+    background: #111;
+    color: #eee;
+    border: 1px solid #333;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+}
+
+#names-header {
+    padding: 10px 12px;
+    border-bottom: 1px solid #333;
+    background: #181818;
+}
+
+#names-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+}
+
+#names-subtitle {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-top: 2px;
+}
+
+#names-container {
+    background: #111;
+}
+
+/* Fade edges updated for dark background */
+#names-container::before {
+    top: 0;
+    background: linear-gradient(to bottom, #111, transparent);
+}
+
+#names-container::after {
+    bottom: 0;
+    background: linear-gradient(to top, #111, transparent);
+}
+
+/* Rows + text colors in dark theme */
+.victim-row {
+    padding: 4px 0;
+    border-bottom: 1px solid #333;
+    transition: background 0.15s ease;
+}
+
+.victim-row:last-child {
+    border-bottom: none;
+}
+
+.victim-row:hover {
+    background: #1a1a1a;
+}
+
+.victim-name {
+    font-weight: 600;
+    color: #fff;
+}
+
+.victim-meta {
+    font-size: 0.75rem;
+    color: #bbb;
+}

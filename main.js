@@ -1,21 +1,142 @@
 // main.js
-// Virtualized names list UI.
+// Virtualized names list UI + curated photo strip.
 // Key features:
 // - Detects row height automatically for accurate virtualization
-// - Smooth continuous auto-scroll downward (stops when reaching bottom)
+// - Smooth continuous auto-scroll downward for names (stops at bottom)
 // - Zoom-driven virtualization: zoom level maps to list position
-// - Animations (auto-scroll and zoom easing) coordinated to avoid jitter
+// - Left photo strip populated from a static PHOTO_ITEMS list (no user uploads)
+// - Photo strip gently scrolls downward when zooming out of the chart
+//
+// To add/change photos, just edit the PHOTO_ITEMS array below and make sure the
+// image files exist at the specified paths in your project (e.g. /images/...).
+
+// ---------------------------------------
+// Curated photo configuration
+// ---------------------------------------
+const PHOTO_ITEMS = [
+    // Example entries — replace these with your actual files / captions / credits
+    // Make sure these paths match your folder structure (e.g. "images/..." or "assets/...").
+    {
+        src: "images/gaza_001.webp",
+        caption: "Palestinians flee from the city of Khan Younis in southern Gaza after an Israeli ground and air offensive",
+        credit: "AP Photo"
+    },
+    {
+        src: "images/download.webp",
+        caption: "Palestinians inspect the rubble of destroyed buildings following Israeli airstrikes on the town of Khan Younis.",
+        credit: "AP Photo"
+    },
+    {
+        src: "images/download (1).webp",
+        caption: "Israeli Lt. Col. Ido Ben Anat stands in an apartment during a ground operation in the Gaza Strip",
+        credit: "AP Photo"
+    },
+        {
+        src: "images/download (2).webp",
+        caption: "Palestinians flee from northern Gaza as Israeli tanks block the Salah al-Din road in the central Gaza Strip",
+        credit: "AP Photo"
+    },
+        {
+        src: "images/download (3).webp",
+        caption: "Palestinians look at the destruction after an Israeli strike on residential buildings and a mosque in Rafah",
+        credit: "AP Photo"
+    },
+               {
+        src: "images/download (4).webp",
+        caption: "Palestinian women wash clothes with seawater at the beach in Deir al Balah, Gaza Strip,",
+        credit: "AP Photo"
+    },        {
+        src: "images/download (5).webp",
+        caption: "Palestinians line up for a meal in Rafah, Gaza Strip.",
+        credit: "AP Photo"
+    },        {
+        src: "images/download (6).webp",
+        caption: "Palestinians line up for a meal in Rafah, Gaza Strip.",
+        credit: "AP Photo"
+    },        {
+        src: "images/download (7).webp",
+        caption: "Humanitarian aid is airdropped to Palestinians over Gaza City",
+        credit: "AP Photo"
+    },        {
+        src: "images/download (8).webp",
+        caption: "Palestinians flee to the southern Gaza Strip on Salah al-Din Street in Bureij, Gaza Strip",
+        credit: "AP Photo"
+    },        {
+        src: "images/download (9).webp",
+        caption: "A tent camp housing Palestinians displaced by the Israeli offensive in Rafah, Gaza Strip,",
+        credit: "AP Photo"
+    },        {
+        src: "images/download (10).webp",
+        caption: "Israeli female soldiers pose for a photo on a position on the Gaza Strip border, in southern Israel",
+        credit: "AP Photo"
+    },
+    {
+        src: "images/download (11).webp",
+        caption: "",
+        credit: "AP Photo"
+    },
+    {
+        src: "images/download (12).webp",
+        caption: "Members of the Al-Rabaya family break their fast during the Muslim holy month of Ramadan outside their destroyed home by the Israeli airstrikes in Rafah, Gaza Strip",
+        credit: "AP Photo"
+    },
+        {
+        src: "images/download (13).webp",
+        caption: "A child looks through a broken window in Rafah, Gaza Strip",
+        credit: "AP Photo"
+    },
+        {
+        src: "images/download (14).webp",
+        caption: "Destroyed buildings are seen through the window of an airplane from the U.S. Air Force overflying the Gaza Strip",
+        credit: "AP Photo"
+    }
+];
 
 document.addEventListener("DOMContentLoaded", function () {
     const NAMES_CSV_PATH = "T4P-KiG-Names-2025-07-31-full.csv";
 
     const namesContainer = document.getElementById("names-container");
+    const photoStripInner = document.getElementById("photo-strip-inner");
     const VISIBLE_COUNT = 80; // Number of rows rendered in the viewport buffer
 
     let victims = [];
 
     // Estimated per-row pixel height; updated by detectRowHeight()
     let ROW_HEIGHT = 30;
+
+    // ---------------------------------------
+    // Render photo strip from PHOTO_ITEMS
+    // ---------------------------------------
+    function renderPhotoStrip() {
+        if (!photoStripInner) return;
+
+        photoStripInner.innerHTML = "";
+
+        PHOTO_ITEMS.forEach(item => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "photo-item";
+
+            const img = document.createElement("img");
+            img.src = item.src;
+            img.alt = item.caption || "";
+
+            const caption = document.createElement("div");
+            caption.className = "photo-caption";
+            caption.textContent = item.caption || "";
+
+            const credit = document.createElement("div");
+            credit.className = "photo-credit";
+            credit.textContent = item.credit || "";
+
+            wrapper.appendChild(img);
+            if (item.caption) wrapper.appendChild(caption);
+            if (item.credit) wrapper.appendChild(credit);
+
+            photoStripInner.appendChild(wrapper);
+        });
+    }
+
+    renderPhotoStrip();
 
     // -----------------------------
     // AUTO-DETECT ROW HEIGHT
@@ -43,18 +164,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     detectRowHeight();
 
-
     // -----------------------------------------
-    // VIRTUAL SCROLL ENGINE (translateY slider)
+    // VIRTUAL SCROLL ENGINE (names, right panel)
     // -----------------------------------------
-    // Maintains a small DOM subtree (inner) containing only the visible rows.
-    // The engine computes a fractional offset (rows + fraction) and applies a
-    // translateY for the fractional part to produce smooth sub-row scrolling.
-    let currentOffset = 0;   // logical row offset currently rendered (can be fractional)
+    let currentOffset = 0;   // logical row offset (can be fractional)
     let targetOffset = 0;    // desired offset used by zoom easing
-    let offsetAnimating = false; // true while offset is being eased toward targetOffset
-    let zoomAnimating = false;   // true while zoom-triggered easing is in progress
+    let offsetAnimating = false;
+    let zoomAnimating = false;
 
+    // namesContainer will hold an inner element that we actually translate.
     let inner = null;
     function ensureInner() {
         if (!inner) {
@@ -119,33 +237,34 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        currentOffset += diff * 0.18;  // easing factor controls smoothness / speed
+        currentOffset += diff * 0.18;  // Easing factor (0..1)
         renderVirtual(currentOffset);
 
         requestAnimationFrame(animateOffset);
     }
 
     // -----------------------------------------
-    // ZOOM → list position mapping (only sets a target)
+    // ZOOM → list position mapping
     // -----------------------------------------
-    // Maps a zoom scale value to a logical list offset. Uses a logarithmic
-    // mapping so changes at extreme scales move more gradually and mid-range
-    // scales produce more perceptible repositioning.
+    // Maps a zoom scale (e.g., k from d3.zoomTransform) to a row offset in the
+    // victims array using a logarithmic mapping. Higher zoom (larger scale)
+    // maps to near the start of the list, while zooming out maps toward the end.
     function updateTargetFromScale(scale) {
         if (!victims.length) return;
 
+        // Clamp scale to sane bounds to avoid log issues.
         const MIN_K = 0.2, MAX_K = 1000;
         const clamped = Math.min(MAX_K, Math.max(MIN_K, scale));
 
-        // Compute normalized parameter t in [0,1] from log-scale,
-        // reversing so higher scale -> nearer to start of list
+        // Normalize via log so doubling the scale has a roughly uniform effect.
+        // We invert it so zooming in moves toward index 0, and zooming out moves
+        // toward the bottom of the list.
         const t = 1 - ((Math.log(clamped) - Math.log(MIN_K)) /
                        (Math.log(MAX_K) - Math.log(MIN_K)));
 
         const maxOffset = Math.max(0, victims.length - VISIBLE_COUNT);
         targetOffset = t * maxOffset;
 
-        // Start easing toward the new target if not already animating.
         zoomAnimating = true;
         if (!offsetAnimating) {
             offsetAnimating = true;
@@ -154,34 +273,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // -----------------------------
-    // AUTO-SCROLL (DOWN ONLY)
+    // AUTO-SCROLL (DOWN ONLY) for names
     // -----------------------------
-    // Continuously nudges the list downward at a small rate (rows per frame).
-    // Auto-scroll is paused while a zoom animation is in progress, and it
-    // stops once the viewport reaches the bottom of the list.
-    const AUTO_SPEED = 0.006;      // rows per frame; smaller values => slower auto-scroll
+    // When not in the middle of a zoom-based animation, gently auto-scroll the
+    // list downward. This loop runs every frame via requestAnimationFrame.
+    const AUTO_SPEED = 0.006; // rows per frame
 
     function autoScrollLoop() {
         if (victims.length > 0 && !zoomAnimating) {
             const maxOffset = Math.max(0, victims.length - VISIBLE_COUNT);
 
-            // Move down only if not at the bottom
+            // Only scroll if we haven't reached the last row.
             if (currentOffset < maxOffset) {
                 currentOffset += AUTO_SPEED;
+
                 if (currentOffset > maxOffset) {
                     currentOffset = maxOffset;
                 }
+
                 renderVirtual(currentOffset);
             }
-            // If at bottom, do nothing; auto-scroll resumes if zoom moves us up.
         }
 
         requestAnimationFrame(autoScrollLoop);
     }
 
-    // Kick off the continuous auto-scroll loop
     requestAnimationFrame(autoScrollLoop);
-
 
     // -----------------------------
     // LOAD CSV
@@ -221,17 +338,83 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // ---------------------------------------
+    // PHOTO STRIP: gentle scrolling on zoom-out
+    // ---------------------------------------
+    let photoScrollVelocity = 0;
+    const PHOTO_FRICTION = 0.96;
+
+    function photoScrollLoop() {
+        if (!photoStripInner) {
+            requestAnimationFrame(photoScrollLoop);
+            return;
+        }
+
+        if (Math.abs(photoScrollVelocity) > 0.02) {
+            const maxScroll =
+                photoStripInner.scrollHeight - photoStripInner.clientHeight;
+
+            if (maxScroll > 0) {
+                photoStripInner.scrollTop += photoScrollVelocity;
+
+                // Clamp and stop at edges
+                if (photoStripInner.scrollTop >= maxScroll && photoScrollVelocity > 0) {
+                    photoStripInner.scrollTop = maxScroll;
+                    photoScrollVelocity = 0;
+                } else if (photoStripInner.scrollTop <= 0 && photoScrollVelocity < 0) {
+                    photoStripInner.scrollTop = 0;
+                    photoScrollVelocity = 0;
+                } else {
+                    photoScrollVelocity *= PHOTO_FRICTION;
+                }
+            } else {
+                // No scrollable content
+                photoScrollVelocity = 0;
+            }
+        }
+
+        requestAnimationFrame(photoScrollLoop);
+    }
+
+    if (photoStripInner) {
+        requestAnimationFrame(photoScrollLoop);
+    }
+
+    // Called whenever zoom changes; we give a small downward "push"
+    // when the chart is zoomed OUT (scale decreases).
+    function handlePhotoZoomScroll(scale, prevScale) {
+        if (!photoStripInner) return;
+
+        if (scale < prevScale) {
+            // The more dramatic the zoom-out, the stronger the push.
+            const ratio = prevScale / Math.max(scale, 0.0001);
+            const boost = Math.min(3, Math.max(0.53, Math.log10(ratio + 1)));
+            photoScrollVelocity += boost;
+        }
+    }
 
     // -----------------------------
     // HOOK ZOOM CHANGES
     // -----------------------------
     // If a global `window.viz` object exists (e.g., an external zoom controller),
-    // connect to its onZoomChange callback so zoom updates drive the list position.
+    // connect to its onZoomChange callback so zoom updates drive both the
+    // names list position and the photo strip scroll behaviour.
+    let lastZoomScale = null;
+
     function attachZoomListener() {
         if (!window.viz) return;
+
+        lastZoomScale = window.viz.initialScale || 1;
+
         window.viz.onZoomChange = ({ scale }) => {
             updateTargetFromScale(scale);
+
+            if (lastZoomScale != null) {
+                handlePhotoZoomScroll(scale, lastZoomScale);
+            }
+            lastZoomScale = scale;
         };
+
         // Also apply the current scale immediately
         updateTargetFromScale(window.viz.initialScale);
     }

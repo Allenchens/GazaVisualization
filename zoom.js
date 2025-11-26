@@ -12,41 +12,197 @@ window.PeopleSquares = class PeopleSquares {
         // flag to disable trivia during animations
         this.skipAnimation = false;
 
-        // Zoom trivia messages (threshold = normalized zoom scale)
+        // Trivia messages now use PEOPLE ON SCREEN instead of raw zoom scale.
+        // peopleThreshold is the approximate minimum number of people currently
+        // represented inside the COUNTED AREA (the red dashed box) when this
+        // message should fire. Adjust these values as you like.
         this.zoomMessages = [
-            {
-                threshold: 1,
-                message: "What you’re seeing now is represents 1 person",
-                triggered: false
-            },
-            {
-                threshold: 1.5,
-                message: "Zoomed out a bit: each square now stands in for more than one screenful of people.",
-                triggered: false
-            },
-            {
-                threshold: 3,
-                message: "Now you’re looking at numbers comparable to a small neighbourhood or town.",
-                triggered: false
-            },
-            {
-                threshold: 7,
-                message: "At this scale, each square covers tens of thousands of people.",
-                triggered: false
-            },
-            {
-                threshold: 15,
-                message: "Zoomed far out: individuals disappear into the mass of the statistic.",
-                triggered: false
-            }
-        ];
+    {
+        peopleThreshold: 1.04,
+        message:
+            "What you see right now represents a single life, 1 person that should have grown old, laughed, loved, and Lived.",
+        triggered: false
+    },
+        {
+        peopleThreshold: 2,
+        message:
+            " 2 senior doctors have reportedly died under torture in Israeli custody",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 10,
+        message:
+            "10 Al Jazeera staff members were killed while reporting from Gaza.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 18,
+        message:
+            "18 senior specialists in vital fields such as surgery, anaesthesiology, intensive care and paediatrics, were taken from Gaza’s hospitals and disappeared into Israeli detention. Depriving Gaza’s devastated health system of critical expertise.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 28,
+        message:
+            "28 physicians in total are detained by Israeli forces. 125 Hospitals and Clinics are damaged. ",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 87,
+        message:
+            "87 Palestinian women are currently imprisoned in Israeli jails, held far from their families.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 154,
+        message:
+            "154 children in Gaza have died from starvation under siege conditions.",
+        triggered: false
+    },
+
+       {
+        peopleThreshold: 240,
+        message:
+            "240 Israelis Hostages were taken into Gaza as captives by Hamas during the Oct 7 attack.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 300,
+        message:
+            "300 journalists and media workers have been killed in Gaza while documenting the violence. More than in any conflict in history.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 459,
+        message:
+            "459 people in Gaza have died of starvation as famine deepens.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 780,
+        message:
+            "780 teachers and education staff in Gaza have been killed, 92 percent of schools now require complete reconstruction.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 1139,
+        message:
+            "Israel cites the 1,139 people killed on October 7 as justification, even as its response has escalated into genocide.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 1722,
+        message:
+            "1,722 health and aid workers have been killed in Gaza while trying to save lives.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 2600,
+        message:
+            "2,600 people were killed by Israeli fire while trying to collect food at aid and GHF sites.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 3500,
+        message:
+            "An estimated 3,500 children in Gaza now live with amputated limbs after Israeli attacks.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 10800,
+        message:
+            "10,800 Palestinians are imprisoned in Israel, including 450 children, many without charge or trial.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 12000,
+        message:
+            "12,000 children in Gaza are acutely malnourished as food scarcity intensifies. That is 1 in 4 children.",
+        triggered: false
+    },
+        {
+        peopleThreshold: 19000,
+        message:
+            "More than 19000 injured while trying to collect food aid.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 20000,
+        message:
+            "20,000 children have been killed in Gaza, that's one child killed every hour for 2 years.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 67000,
+        message:
+            "67,000 Palestinians have been killed in Gaza, with thousands still under the rubble. 1 out of every 33 Gazans has been killed.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 87000,
+        message:
+            "87,000 university students in Gaza no longer have access to education, all 63 Universities in Gaza have been damaged or destroyed.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 169000,
+        message:
+            "169,000 people in Gaza have been injured, many with life-altering wounds.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 641000,
+        message:
+            "641,000 people in Gaza are projected to face catastrophic hunger.",
+        triggered: false
+    },
+
+    {
+        peopleThreshold: 658000,
+        message:
+            "658,000 school-aged children in Gaza have lost all access to education. More than 2,300 educational facilities have been destroyed.",
+        triggered: false
+    },
+       {
+        peopleThreshold: 1050000,
+        message:
+            "89% of Gaza's Water and sanitation infrastructure is damaged. Half of Gaza's population survives on less than 6 liters of water per day, below the emergency 20 liter standard set for 'short term survival' ",
+        triggered: false
+    },
+       {
+        peopleThreshold: 2100000,
+        message:
+            "This is the population of Gaza, 2.1 million people  trapped under siege, facing devastation.",
+        triggered: false
+    }
+];
+
 
         // external hook for other scripts (main.js) to listen to zoom changes
         this.onZoomChange = null;
 
         // D3 zoom
         this.zoom = d3.zoom()
-            .scaleExtent([0.2, 1000])
+            .scaleExtent([0.5, 1000])
             .wheelDelta(event => {
                 const dy = -event.deltaY;
 
@@ -93,111 +249,110 @@ window.PeopleSquares = class PeopleSquares {
     }
 
     createSVG() {
-    this.svg = this.container.append("svg")
-        .attr("viewBox", `0 0 ${this.width} ${this.height}`)
-        .style("border", "1px solid #ccc")  // thin outer border for the whole SVG
-        .style("width", "100%")
-        .style("height", "100%");
+        this.svg = this.container.append("svg")
+            .attr("viewBox", `0 0 ${this.width} ${this.height}`)
+            .style("border", "1px solid #ccc")  // thin outer border for the whole SVG
+            .style("width", "100%")
+            .style("height", "100%");
 
-    // 🔹 Glow filter for the counted-area border
-    const defs = this.svg.append("defs");
-    const glowFilter = defs.append("filter")
-        .attr("id", "viewport-glow")
-        .attr("x", "-50%")
-        .attr("y", "-50%")
-        .attr("width", "200%")
-        .attr("height", "200%");
-    glowFilter.append("feGaussianBlur")
-        .attr("stdDeviation", "3")
-        .attr("result", "coloredBlur");
-    const feMerge = glowFilter.append("feMerge");
-    feMerge.append("feMergeNode").attr("in", "coloredBlur");
-    feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+        // 🔹 Glow filter for the counted-area border
+        const defs = this.svg.append("defs");
+        const glowFilter = defs.append("filter")
+            .attr("id", "viewport-glow")
+            .attr("x", "-50%")
+            .attr("y", "-50%")
+            .attr("width", "200%")
+            .attr("height", "200%");
+        glowFilter.append("feGaussianBlur")
+            .attr("stdDeviation", "3")
+            .attr("result", "coloredBlur");
+        const feMerge = glowFilter.append("feMerge");
+        feMerge.append("feMergeNode").attr("in", "coloredBlur");
+        feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
-    // Main zoom group (everything that zooms lives inside here)
-    this.zoomGroup = this.svg.append("g").attr("class", "zoom-group");
-    this.containerGroup = this.zoomGroup.append("g").attr("class", "squares-group");
-    this.textGroup = this.zoomGroup.append("g").attr("class", "labels-group");
-    this.legendGroup = this.svg.append("g").attr("class", "legend-group");
+        // Main zoom group (everything that zooms lives inside here)
+        this.zoomGroup = this.svg.append("g").attr("class", "zoom-group");
+        this.containerGroup = this.zoomGroup.append("g").attr("class", "squares-group");
+        this.textGroup = this.zoomGroup.append("g").attr("class", "labels-group");
+        this.legendGroup = this.svg.append("g").attr("class", "legend-group");
 
-    // Legend: Zoom + Scale
-    this.xAxisLabel = this.legendGroup.append("text")
-        .attr("class", "x-axis-label")
-        .attr("x", this.width / 2)
-        .attr("y", 20)
-        .attr("text-anchor", "middle")
-        .style("font-size", "14px")
-        .text(`Zoom: 1.00× (from default) | Scale: 1.00 people per pixel`);
+        // Legend: Zoom + Scale
+        this.xAxisLabel = this.legendGroup.append("text")
+            .attr("class", "x-axis-label")
+            .attr("x", this.width / 2)
+            .attr("y", 20)
+            .attr("text-anchor", "middle")
+            .style("font-size", "14px")
+            .text(`Zoom: 1.00× (from default) | Scale: 1.00 people per pixel`);
 
-    // Legend: people on screen counter
-    this.currentPeopleLabel = this.legendGroup.append("text")
-        .attr("class", "current-people-label")
-        .attr("x", this.width / 2)
-        .attr("y", 35)
-        .attr("text-anchor", "middle")
-        .style("font-size", "12px")
-        .style("font-weight", "bold")
-        .text("People currently represented on screen: ≈ 1");
+        // Legend: people on screen counter
+        this.currentPeopleLabel = this.legendGroup.append("text")
+            .attr("class", "current-people-label")
+            .attr("x", this.width / 2)
+            .attr("y", 35)
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .text("People currently represented on screen: ≈ 1");
 
-    // Legend: sample square
-    this.pixelSample = this.legendGroup.append("rect")
-        .attr("x", this.width / 2 - 60)
-        .attr("y", 45)
-        .attr("width", 20)
-        .attr("height", 20)
-        .attr("fill", "lightgray")
-        .attr("stroke", "black")
-        .attr("stroke-width", 1);
+        // Legend: sample square
+        this.pixelSample = this.legendGroup.append("rect")
+            .attr("x", this.width / 2 - 60)
+            .attr("y", 45)
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("fill", "lightgray")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1);
 
-    // Legend: sample square label
-    this.pixelSampleLabel = this.legendGroup.append("text")
-        .attr("x", this.width / 2 - 30)
-        .attr("y", 60)
-        .attr("text-anchor", "start")
-        .style("font-size", "12px")
-        .text("= 400 people");
+        // Legend: sample square label
+        this.pixelSampleLabel = this.legendGroup.append("text")
+            .attr("x", this.width / 2 - 30)
+            .attr("y", 60)
+            .attr("text-anchor", "start")
+            .style("font-size", "12px")
+            .text("= 400 people");
 
-    //  COUNTED AREA BORDER (what your counter is measuring)
-    this.viewportBorder = this.svg.append("rect")
-        .attr("class", "viewport-border")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", this.width)
-        .attr("height", this.height)
-        .attr("fill", "none")
-        .attr("stroke", "#ff4444")
-        .attr("stroke-width", 6)
-        .attr("stroke-dasharray", "12,6")
-        .attr("filter", "url(#viewport-glow)")
-        .style("pointer-events", "none"); // never block zoom/pan
+        //  COUNTED AREA BORDER (what your counter is measuring)
+        this.viewportBorder = this.svg.append("rect")
+            .attr("class", "viewport-border")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", this.width)
+            .attr("height", this.height)
+            .attr("fill", "none")
+            .attr("stroke", "#ff4444")
+            .attr("stroke-width", 6)
+            .attr("stroke-dasharray", "12,6")
+            .attr("filter", "url(#viewport-glow)")
+            .style("pointer-events", "none"); // never block zoom/pan
 
-    //  Label background for readability
-    this.viewportLabelBg = this.svg.append("rect")
-        .attr("class", "viewport-label-bg")
-        .attr("x", this.width - 170)
-        .attr("y", 10)
-        .attr("width", 160)
-        .attr("height", 26)
-        .attr("rx", 4)
-        .attr("ry", 4)
-        .style("fill", "rgba(0,0,0,0.65)")
-        .style("pointer-events", "none");
+        //  Label background for readability
+        this.viewportLabelBg = this.svg.append("rect")
+            .attr("class", "viewport-label-bg")
+            .attr("x", this.width - 170)
+            .attr("y", 10)
+            .attr("width", 160)
+            .attr("height", 26)
+            .attr("rx", 4)
+            .attr("ry", 4)
+            .style("fill", "rgba(0,0,0,0.65)")
+            .style("pointer-events", "none");
 
-    //  "COUNTED AREA" label text
-    this.viewportLabel = this.svg.append("text")
-        .attr("class", "viewport-label")
-        .attr("x", this.width - 15)
-        .attr("y", 28)
-        .attr("text-anchor", "end")
-        .style("font-size", "14px")
-        .style("font-weight", "bold")
-        .style("fill", "#ffdddd")
-        .style("pointer-events", "none")
-        .text("COUNTED AREA");
+        //  "COUNTED AREA" label text
+        this.viewportLabel = this.svg.append("text")
+            .attr("class", "viewport-label")
+            .attr("x", this.width - 15)
+            .attr("y", 28)
+            .attr("text-anchor", "end")
+            .style("font-size", "14px")
+            .style("font-weight", "bold")
+            .style("fill", "#ffdddd")
+            .style("pointer-events", "none")
+            .text("COUNTED AREA");
 
-    this.svg.call(this.zoom);
-}
-
+        this.svg.call(this.zoom);
+    }
 
     createTriviaDisplay() {
         this.triviaDisplay = d3.select("body").append("div")
@@ -303,31 +458,18 @@ window.PeopleSquares = class PeopleSquares {
                 .style("font-size", "12px");
         });
 
-        // Trivia system
-        if (!this.skipAnimation) {
-            let triggeredMessage = null;
-            for (let msg of this.zoomMessages) {
-                if (normalizedScale >= msg.threshold && !msg.triggered) {
-                    triggeredMessage = msg.message;
-                    msg.triggered = true;
-                } else if (normalizedScale < msg.threshold) {
-                    msg.triggered = false;
-                }
-            }
-            if (triggeredMessage) {
-                this.animateTriviaMessage(triggeredMessage);
-            }
-        }
-
         // Legend: effective people per pixel
         const peoplePerPixel = this.personsPerPixel / (scale * scale);
+
+        // Viewport people count
+        const viewportArea = this.width * this.height; // 1000 x 1000
+        const peopleOnScreen = viewportArea * peoplePerPixel;
+
+        // Update legend text
         this.xAxisLabel.text(
             `Zoom: ${normalizedScale.toFixed(2)}× (from default) | Scale: ${peoplePerPixel.toFixed(6)} people per pixel`
         );
 
-        // Legend: people currently represented on screen
-        const viewportArea = this.width * this.height; // 1000 x 1000
-        const peopleOnScreen = viewportArea * peoplePerPixel;
         if (this.currentPeopleLabel) {
             let displayVal;
             if (peopleOnScreen >= 10) {
@@ -344,6 +486,24 @@ window.PeopleSquares = class PeopleSquares {
         const rectArea = 20 * 20;
         const rectValue = rectArea * peoplePerPixel;
         this.pixelSampleLabel.text(`= ${Math.round(rectValue).toLocaleString()} people`);
+
+        // 🎯 Trivia system based on PEOPLE ON SCREEN
+        if (!this.skipAnimation) {
+            let triggeredMessage = null;
+            for (let msg of this.zoomMessages) {
+                // fire when the counted area holds at least peopleThreshold people
+                if (peopleOnScreen >= msg.peopleThreshold && !msg.triggered) {
+                    triggeredMessage = msg.message;
+                    msg.triggered = true;
+                } else if (peopleOnScreen < msg.peopleThreshold) {
+                    // reset so it can fire again if you zoom back out and cross it again
+                    msg.triggered = false;
+                }
+            }
+            if (triggeredMessage) {
+                this.animateTriviaMessage(triggeredMessage);
+            }
+        }
 
         // 🔗 notify listeners (main.js) so the names can scroll
         if (typeof this.onZoomChange === "function") {
@@ -369,7 +529,7 @@ window.PeopleSquares = class PeopleSquares {
             .style("right", "0px")
             .style("bottom", "100px")
             .transition()
-            .delay(3000)
+            .delay(5000)
             .duration(1000)
             .style("opacity", "0")
             .on("end", () => {
