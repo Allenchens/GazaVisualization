@@ -719,3 +719,42 @@ body {
     font-size: 0.75rem;
     color: #bbb;
 }
+/* === Dark (black & white) header and footer === */
+
+/* Top bar */
+.page-header {
+  background: #111;
+  color: #eee;
+  border-bottom: 1px solid #333;
+}
+
+.page-header h1 {
+  color: #fff;
+}
+
+.subtitle {
+  color: #ccc;
+}
+
+/* Bottom bar */
+.footer-about {
+  background: #111;
+  color: #eee;
+  border-top: 1px solid #333;
+}
+
+.footer-text p,
+.footer-credits p {
+  color: #eee;
+}
+
+.footer-text a,
+.footer-credits a {
+  color: #ddd;
+  text-decoration: underline;
+}
+
+.footer-text a:hover,
+.footer-credits a:hover {
+  color: #fff;
+}

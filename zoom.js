@@ -291,7 +291,7 @@ window.PeopleSquares = class PeopleSquares {
             .attr("x", this.width / 2)
             .attr("y", 35)
             .attr("text-anchor", "middle")
-            .style("font-size", "12px")
+            .style("font-size", "14px")
             .style("font-weight", "bold")
             .text("People currently represented on screen: ≈ 1");
 
@@ -311,6 +311,7 @@ window.PeopleSquares = class PeopleSquares {
             .attr("y", 60)
             .attr("text-anchor", "start")
             .style("font-size", "12px")
+            .style("font-weight", "bold")
             .text("= 400 people");
 
         //  COUNTED AREA BORDER (what your counter is measuring)
