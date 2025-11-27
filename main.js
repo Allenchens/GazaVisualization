@@ -382,16 +382,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Called whenever zoom changes; we give a small downward "push"
     // when the chart is zoomed OUT (scale decreases).
-    function handlePhotoZoomScroll(scale, prevScale) {
-        if (!photoStripInner) return;
+function handlePhotoZoomScroll(scale, prevScale) {
+    if (!photoStripInner) return;
 
-        if (scale < prevScale) {
-            // The more dramatic the zoom-out, the stronger the push.
-            const ratio = prevScale / Math.max(scale, 0.0001);
-            const boost = Math.min(3, Math.max(0.53, Math.log10(ratio + 1)));
-            photoScrollVelocity += boost;
-        }
+    // Only care about zooming OUT
+    if (scale < prevScale) {
+        // Relative zoom change (e.g. 0.2 = 20% change, 0.02 = 2% change)
+        const relChange = Math.abs(scale - prevScale) / Math.max(prevScale, 1e-6);
+
+        // Convert that into a boost:
+        // - big wheel jumps (large relChange) → bigger boost
+        // - tiny touchpad steps (small relChange) → tiny boost
+        let boost = relChange * 17;   // ← main sensitivity knob
+
+        // Keep it within a reasonable range
+        boost = Math.min(2.5, Math.max(0.05, boost));
+
+        photoScrollVelocity += boost;
     }
+}
+
 
     // -----------------------------
     // HOOK ZOOM CHANGES
